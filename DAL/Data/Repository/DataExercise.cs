@@ -170,41 +170,35 @@ namespace DAL.Data.Repository
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
-                        if (reader["Data"] != DBNull.Value)
-                        {
 
-                            if (reader.Read())
-                            {
 
-                                byte[] videoData = (byte[])reader["Data"];
-                                exercise = new Exercise
-                                {
-                                    Id = Convert.ToInt32(reader["Id"]),
-                                    Name = reader["Name"].ToString(),
-                                    Description = reader["Description"].ToString(),
-                                    Data = videoData,
-                                    IdType = Convert.ToInt32(reader["IdType"]),
-                                    IdSegment = Convert.ToInt32(reader["IdSegment"])
-                                };
-                            }
-
-                        }
-                        else
+                        if (reader.Read())
                         {
                             
-                                exercise = new Exercise
-                                {
-                                    Id = Convert.ToInt32(reader["Id"]),
-                                    Name = reader["Name"].ToString(),
-                                    Description = reader["Description"].ToString(),
-                                    Data = new byte[0],
-                                    IdType = Convert.ToInt32(reader["IdType"]),
-                                    IdSegment = Convert.ToInt32(reader["IdSegment"])
-                                };
-                           
+                            exercise = new Exercise
+                            {                                
+                                Id = Convert.ToInt32(reader["Id"]),
+                                Name = reader["Name"].ToString(),
+                                Description = reader["Description"].ToString(),
+                                //Data = (byte[])reader["Data"],
+                                IdType = Convert.ToInt32(reader["IdType"]),
+                                IdSegment = Convert.ToInt32(reader["IdSegment"])
+                            };
+
+                            if (reader["Data"] != DBNull.Value)
+                            {
+                                byte[] videoData = (byte[])reader["Data"];
+                                exercise.Data = videoData;
+                            }
+                            else
+                            {
+                                exercise.Data = new byte[0];
+                            }
                         }
+
                     }
                 }
+                
             }
             catch (Exception ex)
             {
